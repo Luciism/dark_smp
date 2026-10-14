@@ -1,9 +1,9 @@
 name: dark-smp
 
 services:
-    minecraft:
+    dark_smp:
         image: josxha/minecraft-purpur:1.21.11
-        container_name: minecraft
+        container_name: dark_smp 
         restart: unless-stopped
         ports:
             - 0.0.0.0:25565:25565
@@ -20,7 +20,7 @@ services:
         stdin_open: true
         tty: true
         environment:
-            RCON_HOST: minecraft     # service name of the server above
+            RCON_HOST: dark_smp     # service name of the server above
             RCON_PORT: "25575"
             RCON_PASSWORD: ${RCON_PASSWORD}
 
@@ -28,7 +28,7 @@ services:
         image: itzg/mc-backup
         restart: unless-stopped
         environment:
-            RCON_HOST: minecraft
+            RCON_HOST: dark_smp 
             RCON_PORT: "25575"
             RCON_PASSWORD: ${RCON_PASSWORD}
             BACKUP_INTERVAL: "0"
@@ -42,7 +42,7 @@ services:
         build: ./restarter
         restart: unless-stopped
         environment:
-            RCON_HOST: minecraft
+            RCON_HOST: dark_smp 
             RCON_PORT: "25575"
             RCON_PASSWORD: ${RCON_PASSWORD}
             RESTART_TIME: "04:00"
