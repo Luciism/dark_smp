@@ -27,6 +27,7 @@ services:
     backup:
         image: itzg/mc-backup
         restart: unless-stopped
+        profiles: ["tools"]
         environment:
             RCON_HOST: dark_smp 
             RCON_PORT: "25575"
