@@ -1,0 +1,50 @@
+name: dark-smp
+
+services:
+    minecraft:
+        image: josxha/minecraft-purpur:1.21.11
+        container_name: minecraft
+        restart: unless-stopped
+        ports:
+            - 0.0.0.0:25565:25565
+            - 127.0.0.1:8081:8080
+        volumes:
+            - ./server:/data:rw
+        environment:
+            - TZ=Europe/London
+            - RAM=6G
+
+    rcon:
+        image: itzg/rcon-cli:latest
+        profiles: ["tools"]        # not started with `docker compose up`
+        stdin_open: true
+        tty: true
+        environment:
+            RCON_HOST: minecraft     # service name of the server above
+            RCON_PORT: "25575"
+            RCON_PASSWORD: ${RCON_PASSWORD}
+
+    backup:
+        image: itzg/mc-backup
+        restart: unless-stopped
+        environment:
+            RCON_HOST: minecraft
+            RCON_PORT: "25575"
+            RCON_PASSWORD: ${RCON_PASSWORD}
+            BACKUP_INTERVAL: "0"
+            PRUNE_BACKUPS_DAYS: "1"
+            TAR_COMPRESS_METHOD: gzip
+        volumes:
+            - ./server:/data:ro
+            - ./backups:/backups
+
+    restarter:
+        build: ./restarter
+        restart: unless-stopped
+        environment:
+            RCON_HOST: minecraft
+            RCON_PORT: "25575"
+            RCON_PASSWORD: ${RCON_PASSWORD}
+            RESTART_TIME: "04:00"
+            TZ: Australia/Sydney
+
